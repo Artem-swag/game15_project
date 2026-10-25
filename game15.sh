@@ -92,9 +92,27 @@ move_tile() {
     fi
 }
 
-# Основной цикл (пока без проверки победы)
+# Ветка: feature/win-check
+# Ответственный: Разработчик 1
+
+check_win() {
+    WIN_BOARD="1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 0"
+    if [ "$BOARD" = "$WIN_BOARD" ]; then
+        return 0 # Победа
+    else
+        return 1 # Не победа
+    fi
+}
+
+# Основной цикл с проверкой
 while true; do
     draw_board
+    
+    if check_win; then
+        echo "ПОЗДРАВЛЯЮ! Вы собрали пятнашки!"
+        break
+    fi
+    
     read -n 1 -s -p "Ход: " key
     echo ""
     if [ "$key" = "q" ]; then break; fi
