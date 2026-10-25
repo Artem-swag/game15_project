@@ -3,7 +3,7 @@
 # Ответственный: Разработчик 1
 
 # Игровое поле. 0 - пустая клетка
-BOARD="1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 0"
+BOARD="1 2 3 4 5 6 7 8 9 10 11 0 12 13 14 15 "
 
 # Функция отрисовки поля
 draw_board() {
@@ -113,7 +113,7 @@ while true; do
         break
     fi
     
-    read -n 1 -s -p "Ход: " key
+    read -p "Ход: (w/a/s/d/q): " key
     echo ""
     if [ "$key" = "q" ]; then break; fi
     move_tile "$key"
