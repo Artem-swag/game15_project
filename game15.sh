@@ -30,5 +30,73 @@ draw_board() {
     done
 }
 
-# Пока просто вызовем функцию для проверки
-draw_board
+# Ветка: feature/moves
+# Ответственный: Разработчик 1
+
+move_tile() {
+    dir=$1
+    empty_idx=-1
+    i=0
+
+    # Находим индекс пустой клетки (0)
+    for num in $BOARD; do
+        if [ "$num" -eq 0 ]; then
+            empty_idx=$i
+            break
+        fi
+        i=$((i + 1))
+    done
+
+    target_idx=-1
+
+    case $dir in
+        w) # Вверх
+            if [ $empty_idx -ge 4 ]; then target_idx=$((empty_idx - 4)); fi ;;
+        s) # Вниз
+            if [ $empty_idx -le 11 ]; then target_idx=$((empty_idx + 4)); fi ;;
+        a) # Влево
+            if [ $((empty_idx % 4)) -ne 0 ]; then target_idx=$((empty_idx - 1)); fi ;;
+        d) # Вправо
+            if [ $((empty_idx % 4)) -ne 3 ]; then target_idx=$((empty_idx + 1)); fi ;;
+    esac
+
+    if [ $target_idx -ne -1 ]; then
+        # Меняем местами пустую клетку и целевую через временные переменные
+        val1=0
+        val2=0
+        i=0
+        new_board=""
+
+        for num in $BOARD; do
+            if [ $i -eq $empty_idx ]; then
+                val1=$num
+            elif [ $i -eq $target_idx ]; then
+                val2=$num
+            fi
+            i=$((i + 1))
+        done
+
+        # Собираем строку заново
+        i=0
+        for num in $BOARD; do
+            if [ $i -eq $empty_idx ]; then
+                new_board="$new_board $val2"
+            elif [ $i -eq $target_idx ]; then
+                new_board="$new_board $val1"
+            else
+                new_board="$new_board $num"
+            fi
+            i=$((i + 1))
+        done
+        BOARD="$new_board"
+    fi
+}
+
+# Основной цикл (пока без проверки победы)
+while true; do
+    draw_board
+    read -n 1 -s -p "Ход: " key
+    echo ""
+    if [ "$key" = "q" ]; then break; fi
+    move_tile "$key"
+done
